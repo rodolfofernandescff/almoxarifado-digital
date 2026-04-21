@@ -176,4 +176,73 @@ class RequisicaoService
             'itens.*.quantidade' => ['required', 'integer', 'min:1'],
         ])->validate();
     }
+
+    /**
+     * Retorna as métricas para o Dashboard baseadas no perfil do usuário.
+     */
+    public function getDashboardStats(User $usuario): array
+    {
+        $perfil = strtolower($usuario->perfil);
+        $isGestor = in_array($perfil, ['administrador', 'almoxarife']);
+
+        if ($isGestor) {
+            $totalProdutos = Produto::query()->count();
+            $requisicoesPendentes = Requisicao::query()->where('status', 'pendente')->count();
+            $estoqueCritico = Produto::query()->whereColumn('estoque_atual', '<=', 'estoque_minimo')->count();
+            
+            $produtosMaisRequisitados = ItemRequisicao::query()
+                ->select('produto_id', DB::raw('SUM(quantidade_pedida) as total_pedido'))
+                ->with('produto:id,nome')
+                ->groupBy('produto_id')
+                ->orderByDesc('total_pedido')
+                ->limit(5)
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'nome' => $item->produto->nome ?? 'Desconhecido',
+                        'total' => (int) $item->total_pedido,
+                    ];
+                });
+                
+            $topEstoqueCritico = Produto::query()
+                ->whereColumn('estoque_atual', '<=', 'estoque_minimo')
+                ->orderBy('estoque_atual', 'asc')
+                ->limit(5)
+                ->get(['id', 'nome', 'estoque_atual', 'estoque_minimo', 'unidade_medida']);
+
+            return [
+                'is_gestor' => true,
+                'total_produtos' => $totalProdutos,
+                'requisicoes_pendentes' => $requisicoesPendentes,
+                'itens_estoque_critico' => $estoqueCritico,
+                'produtos_mais_requisitados' => $produtosMaisRequisitados,
+                'top_estoque_critico' => $topEstoqueCritico,
+            ];
+        }
+
+        // Dashboard simplificado para Requisitante
+        $minhasRequisicoes = Requisicao::query()
+            ->where('user_id', $usuario->id)
+            ->latest()
+            ->limit(5)
+            ->with('itens.produto:id,nome')
+            ->get(['id', 'status', 'created_at', 'justificativa']);
+
+        $totalMinhasPendentes = Requisicao::query()
+            ->where('user_id', $usuario->id)
+            ->where('status', 'pendente')
+            ->count();
+
+        $totalMinhasAprovadas = Requisicao::query()
+            ->where('user_id', $usuario->id)
+            ->where('status', 'aprovado')
+            ->count();
+
+        return [
+            'is_gestor' => false,
+            'minhas_requisicoes' => $minhasRequisicoes,
+            'total_pendentes' => $totalMinhasPendentes,
+            'total_aprovadas' => $totalMinhasAprovadas,
+        ];
+    }
 }

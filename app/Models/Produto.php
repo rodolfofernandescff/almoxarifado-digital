@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class Produto extends Model
 {
+    use LogsActivity;
     protected $fillable = [
         'categoria_id',
         'nome',
@@ -30,5 +33,14 @@ class Produto extends Model
     public function itensRequisicao(): HasMany
     {
         return $this->hasMany(ItemRequisicao::class);
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable()
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->setDescriptionForEvent(fn(string $eventName) => "Produto {$eventName}");
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\RequisicaoAdminController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\RequisicaoController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -53,9 +54,7 @@ Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallb
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard Principal
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Perfil do Usuário
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -73,12 +72,11 @@ Route::middleware(['auth', 'verified', 'perfil.admin'])->prefix('admin')->name('
     // Gerenciamento de Usuários
     Route::resource('users', UserController::class)->except(['show']);
 
+    // Logs do Sistema
+    Route::get('/logs', [\App\Http\Controllers\LogController::class, 'index'])->name('logs.index');
+
     // Dashboard Admin
-    Route::get('/', function () {
-        return Inertia::render('Dashboard', [
-            'section' => 'Admin',
-        ]);
-    })->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 });
 
 /*
@@ -94,11 +92,7 @@ Route::middleware(['auth', 'verified', 'role:almoxarife'])->group(function () {
         ->name('requisicoes.show');
 
     // Área do Almoxarife
-    Route::get('/minha-area', function () {
-        return Inertia::render('Dashboard', [
-            'section' => 'Almoxarife',
-        ]);
-    })->name('almoxarife.area');
+    Route::get('/minha-area', [DashboardController::class, 'index'])->name('almoxarife.area');
 });
 
 /*
@@ -126,11 +120,7 @@ Route::middleware(['auth', 'verified', 'perfil:Administrador,Almoxarife'])->pref
 Route::middleware(['auth', 'verified', 'role:requisitante'])->group(function () {
 
     // Área do Requisitante
-    Route::get('/minha-area', function () {
-        return Inertia::render('Dashboard', [
-            'section' => 'Requisitante',
-        ]);
-    })->name('requisitante.area');
+    Route::get('/minha-area', [DashboardController::class, 'index'])->name('requisitante.area');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

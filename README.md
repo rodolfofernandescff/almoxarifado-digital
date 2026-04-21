@@ -13,6 +13,8 @@ O Almoxarifado Digital é uma aplicação corporativa para operação de almoxar
 - Separação clara de responsabilidades com **Laravel 12** no backend e **Inertia.js + Vue 3** no frontend.
 - Modelo de autorização **RBAC** para garantir isolamento de permissões por tipo de usuário.
 - **Service Layer Pattern** para lógica de negócio isolada e testável.
+- **Trilha de Auditoria (Activity Log)** para governança de TI e conformidade (Auditável).
+- **Dashboard Analítico** com métricas em tempo real e visualização em gráficos (ApexCharts).
 
 ## Funcionalidades
 
@@ -24,6 +26,8 @@ O Almoxarifado Digital é uma aplicação corporativa para operação de almoxar
   - `Requisitante`
 - Cadastro e gestão de Produtos com controle de estoque mínimo.
 - Fluxo completo de Requisições com aprovação/reprovação e baixa automática de estoque.
+- **Sistema Auditável**: Histórico detalhado de ações (criação, edição e exclusão) para usuários, produtos e requisições, visualizável em 'Logs do Sistema'.
+- **Dashboard Dinâmico**: Visualização por perfil (Gestor vs. Requisitante) de métricas de consumo e saúde do estoque.
 
 ## Fluxo de Aprovação de Requisições
 

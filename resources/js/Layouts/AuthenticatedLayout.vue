@@ -145,6 +145,14 @@ const handleLogout = () => {
                             {{ tab.label }}
                         </NavLink>
 
+                        <NavLink
+                            v-if="isAdministrador"
+                            :href="route('admin.logs.index')"
+                            :active="isRouteActive('admin.logs.index')"
+                        >
+                            Auditoria
+                        </NavLink>
+
                         <Dropdown v-if="isAdministrador" align="left" width="48">
                             <template #trigger>
                                 <button
@@ -210,6 +218,8 @@ const handleLogout = () => {
                             <div class="px-1 text-xs font-semibold uppercase tracking-wide text-slate-500">Usuários</div>
                             <DropdownLink :href="route('admin.users.create')">Cadastrar</DropdownLink>
                             <DropdownLink :href="route('admin.users.index')">Consultar</DropdownLink>
+                            <div class="mt-2 px-1 text-xs font-semibold uppercase tracking-wide text-slate-500">Sistema</div>
+                            <DropdownLink :href="route('admin.logs.index')">Auditoria</DropdownLink>
                         </div>
 
                         <div v-if="canManageProdutos" class="space-y-1 pt-2">
