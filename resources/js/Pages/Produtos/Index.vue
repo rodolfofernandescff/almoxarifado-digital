@@ -14,7 +14,7 @@ const page = usePage();
 const successMessage = computed(() => page.props.flash?.success ?? null);
 const userPerfil = computed(() => page.props.auth?.user?.perfil ?? null);
 const canManageProducts = computed(() => ['Administrador', 'Almoxarife'].includes(userPerfil.value));
-const produtosCreateUrl = route('produtos.create', undefined, false);
+const produtosCreateUrl = route('produtos.create');
 
 const isLowStock = (produto) => Number(produto.estoque_atual) <= Number(produto.estoque_minimo);
 
@@ -35,7 +35,7 @@ const deleteProduto = (produtoId) => {
             <div class="flex items-center justify-between gap-4">
                 <div>
                     <h2 class="text-xl font-semibold text-slate-900">Produtos</h2>
-                    <p class="mt-1 text-sm text-slate-500">Controle de estoque com acompanhamento de limite minimo.</p>
+                    <p class="mt-1 text-sm text-slate-500">Controle de estoque com acompanhamento de limite mínimo.</p>
                 </div>
 
                 <Link
@@ -67,7 +67,7 @@ const deleteProduto = (produtoId) => {
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-600">Categoria</th>
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-600">Estoque Atual</th>
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-600">Alerta</th>
-                            <th v-if="canManageProducts" class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-600">Acoes</th>
+                            <th v-if="canManageProducts" class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-600">Ações</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-200 bg-white">

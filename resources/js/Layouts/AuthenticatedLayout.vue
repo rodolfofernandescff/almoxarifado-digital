@@ -42,6 +42,11 @@ const navLinks = [
         allowedPerfis: ['administrador', 'almoxarife', 'requisitante'],
     },
     {
+        label: 'Requisições',
+        route: 'admin.requisicoes.index',
+        allowedPerfis: ['administrador', 'almoxarife'],
+    },
+    {
         label: 'Pedidos',
         route: 'requisicoes.index',
         allowedPerfis: ['almoxarife'],
@@ -60,7 +65,7 @@ const navLinks = [
 const filteredNavLinks = computed(() => {
     const perfil = normalizedPerfil.value;
 
-    // Evita menu vazio quando o perfil ainda nao foi carregado no bootstrap.
+    // Evita menu vazio quando o perfil ainda não foi carregado no bootstrap.
     if (!perfil) {
         return navLinks
             .filter((link) => link.label === 'Dashboard')
@@ -80,15 +85,15 @@ const tabsMenu = computed(() => {
     // Excluir apenas Dashboard que não é uma aba, mas um link de navegação
     const excludeTabs = ['Dashboard', 'Pedidos', 'Meus Pedidos']; // Pedidos e Meus Pedidos não são abas visíveis
     
-    return filteredNavLinks.value.filter((link) => !excludeTabs.includes(link.label));
+    return filteredNavLinks.value.filter((link) => link.label !== 'Dashboard');
 });
 
 /**
  * Verifica se uma rota está ativa no contexto atual.
  */
 const isRouteActive = (routeName) => route().current(routeName);
-const produtosCreateUrl = route('produtos.create', undefined, false);
-const produtosIndexUrl = route('produtos.index', undefined, false);
+const produtosCreateUrl = route('produtos.create');
+const produtosIndexUrl = route('produtos.index');
 
 const handleLogout = () => {
     router.post(route('logout'), {}, {
@@ -146,7 +151,7 @@ const handleLogout = () => {
                                     type="button"
                                     class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out hover:border-gray-300 hover:text-gray-700 focus:outline-none"
                                 >
-                                    Usuarios
+                                    Usuários
                                     <svg class="-me-0.5 ms-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                                     </svg>
@@ -202,7 +207,7 @@ const handleLogout = () => {
                         </NavLink>
 
                         <div v-if="isAdministrador" class="space-y-1 pt-2">
-                            <div class="px-1 text-xs font-semibold uppercase tracking-wide text-slate-500">Usuarios</div>
+                            <div class="px-1 text-xs font-semibold uppercase tracking-wide text-slate-500">Usuários</div>
                             <DropdownLink :href="route('admin.users.create')">Cadastrar</DropdownLink>
                             <DropdownLink :href="route('admin.users.index')">Consultar</DropdownLink>
                         </div>

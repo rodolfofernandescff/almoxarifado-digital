@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\Admin\RequisicaoAdminController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProdutoController;
+use App\Http\Controllers\RequisicaoController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -86,15 +88,10 @@ Route::middleware(['auth', 'verified', 'perfil.admin'])->prefix('admin')->name('
 */
 
 Route::middleware(['auth', 'verified', 'role:almoxarife'])->group(function () {
-
-    // Gerenciar Requisições/Entregas
-    Route::get('/requisicoes', function () {
-        return Inertia::render('Requisicoes/Index');
-    })->name('requisicoes.index');
-
-    Route::get('/requisicoes/{id}', function ($id) {
-        return Inertia::render('Requisicoes/Show');
-    })->name('requisicoes.show');
+    Route::get('/requisicoes', [RequisicaoController::class, 'index'])->name('requisicoes.index');
+    Route::get('/requisicoes/{requisicao}', [RequisicaoController::class, 'show'])
+        ->whereNumber('requisicao')
+        ->name('requisicoes.show');
 
     // Área do Almoxarife
     Route::get('/minha-area', function () {
@@ -106,19 +103,27 @@ Route::middleware(['auth', 'verified', 'role:almoxarife'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
+| Rotas de Gestão de Requisições (Administrador e Almoxarife)
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth', 'verified', 'perfil:Administrador,Almoxarife'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/requisicoes', [RequisicaoAdminController::class, 'index'])->name('requisicoes.index');
+    Route::post('/requisicoes/{requisicao}/aprovar', [RequisicaoAdminController::class, 'aprovar'])
+        ->whereNumber('requisicao')
+        ->name('requisicoes.aprovar');
+    Route::post('/requisicoes/{requisicao}/reprovar', [RequisicaoAdminController::class, 'reprovar'])
+        ->whereNumber('requisicao')
+        ->name('requisicoes.reprovar');
+});
+
+/*
+|--------------------------------------------------------------------------
 | Rotas Requisitante (role:requisitante)
 |--------------------------------------------------------------------------
 */
 
 Route::middleware(['auth', 'verified', 'role:requisitante'])->group(function () {
-    // Meus Pedidos
-    Route::get('/meus-pedidos', function () {
-        return Inertia::render('Requisicoes/MeusPedidos');
-    })->name('requisicoes.meus');
-
-    Route::post('/meus-pedidos', function () {
-        // Criar nova requisição
-    })->name('requisicoes.store');
 
     // Área do Requisitante
     Route::get('/minha-area', function () {
@@ -126,6 +131,11 @@ Route::middleware(['auth', 'verified', 'role:requisitante'])->group(function () 
             'section' => 'Requisitante',
         ]);
     })->name('requisitante.area');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/meus-pedidos', [RequisicaoController::class, 'meusPedidos'])->name('requisicoes.meus');
+    Route::post('/meus-pedidos', [RequisicaoController::class, 'store'])->name('requisicoes.store');
 });
 
 /*
@@ -137,11 +147,13 @@ Route::middleware(['auth', 'verified', 'role:requisitante'])->group(function () 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('produtos', ProdutoController::class)
         ->only(['index', 'show'])
+        ->whereNumber('produto')
         ->names('produtos');
 
     Route::middleware('perfil:Administrador,Almoxarife')->group(function () {
         Route::resource('produtos', ProdutoController::class)
             ->only(['create', 'store', 'edit', 'update', 'destroy'])
+            ->whereNumber('produto')
             ->names('produtos');
     });
 });

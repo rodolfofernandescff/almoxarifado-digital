@@ -47,11 +47,11 @@ defineProps({
                     <dd class="mt-1 text-sm text-slate-900">{{ produto.estoque_atual }}</dd>
                 </div>
                 <div>
-                    <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">Estoque Minimo</dt>
+                    <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">Estoque Mínimo</dt>
                     <dd class="mt-1 text-sm text-slate-900">{{ produto.estoque_minimo }}</dd>
                 </div>
                 <div class="md:col-span-2">
-                    <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">Descricao</dt>
+                    <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">Descrição</dt>
                     <dd class="mt-1 text-sm text-slate-900">{{ produto.descricao || '-' }}</dd>
                 </div>
             </dl>

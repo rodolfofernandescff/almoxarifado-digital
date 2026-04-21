@@ -93,7 +93,7 @@ const emit = defineEmits(['submit']);
             </div>
 
             <div>
-                <InputLabel for="estoque_minimo" value="Estoque Minimo" />
+                <InputLabel for="estoque_minimo" value="Estoque Mínimo" />
                 <TextInput
                     id="estoque_minimo"
                     v-model="form.estoque_minimo"
@@ -106,13 +106,13 @@ const emit = defineEmits(['submit']);
             </div>
 
             <div class="md:col-span-2">
-                <InputLabel for="descricao" value="Descricao" />
+                <InputLabel for="descricao" value="Descrição" />
                 <textarea
                     id="descricao"
                     v-model="form.descricao"
                     rows="4"
                     class="mt-2 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm transition-all duration-300 ease-out focus:border-emerald-500 focus:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-200"
-                    placeholder="Informacoes complementares do produto"
+                    placeholder="Informações complementares do produto"
                 ></textarea>
                 <InputError class="mt-2" :message="form.errors.descricao" />
             </div>

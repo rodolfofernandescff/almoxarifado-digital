@@ -106,7 +106,7 @@ class ProdutoController extends Controller
         $produto->delete();
 
         return Redirect::route('produtos.index')
-            ->with('success', 'Produto excluido com sucesso.');
+            ->with('success', 'Produto excluído com sucesso.');
     }
 
     private function validateProduto(Request $request): array
