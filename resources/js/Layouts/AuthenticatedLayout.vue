@@ -11,8 +11,6 @@ const page = usePage();
 
 const user = computed(() => page.props.auth?.user ?? null);
 const userPerfil = computed(() => user.value?.perfil ?? null);
-const isAdministradorExact = computed(() => userPerfil.value === 'Administrador');
-const canManageProdutos = computed(() => ['Administrador', 'Almoxarife'].includes(userPerfil.value));
 
 const normalizePerfil = (perfil) => {
     if (!perfil) return null;
@@ -25,6 +23,10 @@ const normalizePerfil = (perfil) => {
 
     return null;
 };
+
+const normalizedPerfil = computed(() => normalizePerfil(userPerfil.value));
+const isAdministrador = computed(() => normalizedPerfil.value === 'administrador');
+const canManageProdutos = computed(() => ['administrador', 'almoxarife'].includes(normalizedPerfil.value));
 
 /**
  * Constante que define todos os links de navegação possíveis.
@@ -56,7 +58,7 @@ const navLinks = [
  * Implementa Clean Code: sem lógica complexa no template.
  */
 const filteredNavLinks = computed(() => {
-    const perfil = normalizePerfil(userPerfil.value);
+    const perfil = normalizedPerfil.value;
 
     // Evita menu vazio quando o perfil ainda nao foi carregado no bootstrap.
     if (!perfil) {
@@ -138,6 +140,29 @@ const handleLogout = () => {
                             {{ tab.label }}
                         </NavLink>
 
+                        <Dropdown v-if="isAdministrador" align="left" width="48">
+                            <template #trigger>
+                                <button
+                                    type="button"
+                                    class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out hover:border-gray-300 hover:text-gray-700 focus:outline-none"
+                                >
+                                    Usuarios
+                                    <svg class="-me-0.5 ms-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </template>
+
+                            <template #content>
+                                <DropdownLink :href="route('admin.users.create')">
+                                    Cadastrar
+                                </DropdownLink>
+                                <DropdownLink :href="route('admin.users.index')">
+                                    Consultar
+                                </DropdownLink>
+                            </template>
+                        </Dropdown>
+
                         <Dropdown v-if="canManageProdutos" align="left" width="48">
                             <template #trigger>
                                 <button
@@ -176,8 +201,8 @@ const handleLogout = () => {
                             {{ tab.label }}
                         </NavLink>
 
-                        <div v-if="isAdministradorExact" class="space-y-1 pt-2">
-                            <div class="px-1 text-xs font-semibold uppercase tracking-wide text-slate-500">Usuários</div>
+                        <div v-if="isAdministrador" class="space-y-1 pt-2">
+                            <div class="px-1 text-xs font-semibold uppercase tracking-wide text-slate-500">Usuarios</div>
                             <DropdownLink :href="route('admin.users.create')">Cadastrar</DropdownLink>
                             <DropdownLink :href="route('admin.users.index')">Consultar</DropdownLink>
                         </div>
