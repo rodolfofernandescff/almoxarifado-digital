@@ -6,6 +6,25 @@ Sistema para gestão de estoque e requisições, com controle de acesso baseado 
 
 O Almoxarifado Digital é uma aplicação corporativa para operação de almoxarifado com foco em segurança, rastreabilidade e organização de fluxo. A plataforma centraliza cadastro de usuários, produtos e rotinas de requisição com regras de acesso por perfil.
 
+## Visualização do Sistema
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <img src="screenshots/meus_pedidos.jpg" alt="Interface de solicitações do Requisitante" width="400"/>
+        <br />
+        <i>Interface de solicitações do Requisitante</i>
+      </td>
+      <td align="center">
+        <img src="screenshots/gestao_requisicoes.jpg" alt="Painel de aprovação e controle de estoque" width="400"/>
+        <br />
+        <i>Painel de aprovação e controle de estoque</i>
+      </td>
+    </tr>
+  </table>
+</div>
+
 ## Destaques de Engenharia
 
 - Aplicação explícita de **SOLID Principles** na organização de responsabilidades entre camadas.
